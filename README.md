@@ -1,1 +1,1 @@
-# MYSQL with DBeaver 
+# MySQL with DBeaver 
