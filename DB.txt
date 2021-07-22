@@ -118,3 +118,71 @@ update
 delete 
 	from product 
 		where code = 'AOO2';
+
+-- 2021.07. 22
+-- Sale 테이블 생성
+create 
+	table 
+		sale(
+			no 			int auto_increment,   -- 자동 증가 컬럼
+			p_code 		varchar(4) not null,
+			price 		int not null,
+			sale_cnt 	int not null,
+		    margin_rate int not null,
+		   	primary key(no),
+		    foreign key(p_code) references product(code)
+	  	    );
+	 
+show tables;
+desc sale;
+
+insert 
+	into sale(p_code, price, sale_cnt, margin_rate)
+		values
+			('A001', 4500, 150, 10),
+			('A002', 3800, 140, 15),
+			('B001', 5200, 250, 12),
+			('B002', 4300, 110, 11);
+			
+select * from sale;
+
+-- 조인(join)
+select * 
+	from product as p join sale s 
+		on p.code = s.p_code; 
+	
+select *
+	from product p left outer join sale s 
+		on p.code = s.p_code;
+	
+select code, name, price, sale_cnt, margin_rate
+	from product p left outer join sale s 
+		on p.code = s.p_code;
+
+select 
+	code '코드', 
+	name '제품명', 
+	price '가격', 
+	sale_cnt '판매 수량', 
+	margin_rate '마진율', 
+	price * sale_cnt '판매 금액'
+		from product p left outer join sale s 
+			on p.code = s.p_code
+				where price * sale_cnt >= 500000 
+					order by price * sale_cnt desc;     -- desc: 내림차순  vs  생략 또는 asc: 오름차순
+insert 
+	into sale(p_code, price, sale_cnt, margin_rate)
+		values
+			('A002', 3800, 140, 15);
+
+select 
+	code '코드', 
+	name '제품명', 
+	price '가격', 
+	sum(sale_cnt) '판매 수량', 
+	margin_rate '마진율', 
+	price * sum(sale_cnt) '판매 금액'
+		from product p join sale s 
+			on p.code = s.p_code
+				group by p.code	
+					order by price * sum(sale_cnt) desc;
